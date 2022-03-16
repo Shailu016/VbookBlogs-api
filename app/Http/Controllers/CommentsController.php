@@ -15,12 +15,12 @@ class CommentsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Comments $comments)
+    public function index(Comments $comments, Post $post)
     {
-        $comments = Comments::with('users')->get();
+        $comments = Comments::where('post_id', $post->id)->get();
         return response()->json($comments);
     }
-
+   
 
     /**
      * Store a newly created resource in storage.
@@ -36,25 +36,16 @@ class CommentsController extends Controller
         ]);
        
         
-//dd( Auth::user()->name);
-if(Auth::user()->status == 0){
-    return "You are blocked";
-}else{
     $comments = Comments::create([
         //'user_id' => 1,
      'user_id' => Auth::id(),
-     'user_name' => Auth::user()->name,
-     'image_path' => Auth::user()->image_path,
      "post_id" => $post->id,
     'body' => request('body')
    ]);
-   $comments['users'] = Auth::user();
-    
+   
    return response()->json($comments);
-
+ 
 }
-       
-    }
 
     /**
      * Display the specified resource.
@@ -75,5 +66,6 @@ if(Auth::user()->status == 0){
         return response()->json($comments);
     }
 
+    
    
 }

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Events\PostPublished;
 use App\Notifications\PostCreated;
 use Carbon\Carbon; 
+use Illuminate\Support\Arr;
 
 
 class PostController extends Controller
@@ -74,7 +75,7 @@ class PostController extends Controller
             $posts->name = request('name');
             $posts->excerpt = request('excerpt');
             $posts->body = request('body');
-            $posts->tags = json_encode(request('tags'));
+            $posts->tags = strtolower(  json_encode(request('tags')));
             
             $posts->image_path = $imagePath ?? null;
            
@@ -188,6 +189,26 @@ class PostController extends Controller
         return "Post deleted successfully";
     }
 
+    public function restore(int $id)
+    {
+        // Post::withTrashed()->find($post)->restore();
+        // return "Post restored successfully";
+
+        $blog = Post::onlyTrashed()->findOrFail($id);
+        
+        if (!$blog) {
+
+          
+            return response()->json(['message' => 'Post not found'], 404);
+        }else{
+            $blog->restore();
+    
+            return response()->json($blog, 200);
+          
+        }
+
+    }
+
     public function usersPost()
     {
         $post = Post::where('user_id', Auth::id())->get();
@@ -243,9 +264,13 @@ class PostController extends Controller
     public function post_views(Post $post)
     {
        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->count();
+
+       $yesterdaysviews =  Views::whereDate('created_at',  Carbon::yesterday()->toDateString())->where('post_id', $post->id)->count();
+
        $date = Carbon::now()->subDays(7);
 
        $weeklyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
+       
        $date = Carbon::now()->subDays(30);
        $mothlyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
 
@@ -255,6 +280,7 @@ class PostController extends Controller
        
        return response()->json([
            'todays_Views' => $todaysviews,
+           'yesterdays_Views' => $yesterdaysviews,
            'weekly_Views' => $weeklyViews,
            'mothly_Views' => $mothlyViews,
            'total_Views' => $totalViews
@@ -262,8 +288,28 @@ class PostController extends Controller
 
     
     }
+    
+   public function all_tags()
+   { 
+    //filter tags unique values
+    $tags = Post::select('tags')->get();
 
-   
+    // foreach($tags as $tag){
+    //     $result[] = json_decode($tag->tags);
+    // }
+
+    $result = $tags->map(function ($tag, $key) {
+        return json_decode($tag->tags);
+    });
+    
+    $data = array_values(array_unique(Arr::flatten($result)));
+    
+    return response([
+        'data' => $data
+    ]);
+
+   }
+
 
    
 }
