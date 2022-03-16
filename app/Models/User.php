@@ -42,9 +42,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected $appends = [
-        'followers'
-    ];
+   
     public function bookmarks()
     {
         return $this->belongsToMany(Post::class, 'bookmarks', 'post_id', 'user_id');
@@ -73,8 +71,5 @@ class User extends Authenticatable
     // }
 
     // users that follow this user
-    public function getFollowersAttribute()
-    {
-        return $this->hasMany(UserFollow::class, 'following_id')->count();
-    }
+  
 }

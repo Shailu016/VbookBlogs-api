@@ -5,13 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\Post;
-use App\Models\UserFollow;
+use App\Models\Likes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 
-class ProfileController extends Controller
-{
+
+class ProfileController extends Controller{
     /**
      * Display a listing of the resource.
      *
@@ -102,7 +102,10 @@ class ProfileController extends Controller
      */
     public function all_users(Profile $profile)
     {
-        $users= User::withcount('posts')->get();
+       $users = User::sum('subscribe');
+       $post = Post::count('user_id');
+       $like = Likes::count('like');
+       
     
       
     //   $user = Userfollow::pluck('following_id');
@@ -112,10 +115,14 @@ class ProfileController extends Controller
     //   $user = User::whereIn('id',$user)->get();
     //   dd($user);
       
-     return response($users);
+     return response()->json([
+         'Subscriber' => $users,
+         'PostCount' => $post,
+         'LikeCount' => $like, ]);
        
     
     }
+
 
     /**
      * Update the specified resource in storage.

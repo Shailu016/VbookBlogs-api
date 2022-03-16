@@ -8,7 +8,6 @@ use App\Http\Controllers\LikesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookmarkController;
-use App\Http\Controllers\UserFollowController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 
@@ -24,19 +23,20 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
-
 // post routes
 Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function () {
     //
-    
+    Route::post('post/create', [PostController::class, 'store'])->middleware('auth:sanctum');
+    Route::post('post/{post}/update', [PostController::class, 'update']);
+    Route::delete('post/{post}/delete', [PostController::class, 'delete']);
+    Route::patch('post/{post}/restore', [PostController::class, 'restore']);
 });
+
+
+
 Route::get('post', [PostController::class, 'index']);
 Route::get('/user_post',[PostController::class, 'usersPost'])->middleware('auth:sanctum');
-Route::post('post/create', [PostController::class, 'store'])->middleware('auth:sanctum');
 Route::get('post/{post}', [PostController::class, 'show']);
-Route::post('post/{post}/update', [PostController::class, 'update']);
-Route::delete('post/{post}/delete', [PostController::class, 'delete']);
-Route::patch('post/{post}/restore', [PostController::class, 'restore']);
 Route::get('/all/{user}',[PostController::class,'user_all_post']);
 
 Route::get('/comments/{post}', [CommentsController::class, 'index']);
@@ -71,19 +71,10 @@ Route::post("/upload",[ProfileController::class, "store"])->middleware('auth:san
 
 Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum');
 
-Route::post('/follow/{post}',[UserFollowController::class,'index'])->middleware('auth:sanctum');
-Route::get('/t',[UserFollowController::class,'userfollower'])->middleware('auth:sanctum');
-Route::get('/tt',[UserFollowController::class,'user_follower_post'])->middleware('auth:sanctum');
-Route::get('/ttt',[ProfileController::class,'all_users']);
-Route::get('/check/{post}',[UserFollowController::class,'check'])->middleware('auth:sanctum');
-
-
-
 Route::post('/category/create',[CategoryController::class,'store']);
 Route::post('/category/{category}/update',[CategoryController::class,'update']);
 Route::get('/category',[CategoryController::class,'index']);
 Route::get('/category/{category}',[CategoryController::class,'show']);
-
 
 Route::post('/post/{post}/update/status_draft',[PostController::class,'statusUpdateDraft']);
 Route::post('/post/{post}/update/status_archive',[PostController::class,'statusUpdateArchive']);
@@ -93,3 +84,5 @@ Route::post('/post/tags',[PostController::class,'post_by_tags']);
 Route::get('post/{post}/views/',[PostController::class,'post_views']);
 Route::post('/subscribe',[AuthController::class,'subscribe'])->middleware('auth:sanctum');
 Route::get('/tagList',[PostController::class,'all_tags']);
+
+Route::get('/user_details',[ProfileController::class,'all_users']);

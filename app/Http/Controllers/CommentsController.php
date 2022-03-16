@@ -43,7 +43,7 @@ class CommentsController extends Controller
     'body' => request('body')
    ]);
    
-   return response()->json($comments);
+  return response()->json($comments);
  
 }
 
