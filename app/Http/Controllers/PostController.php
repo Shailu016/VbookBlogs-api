@@ -111,13 +111,21 @@ class PostController extends Controller
         // return response()->json(["post"=>$post, 
         // "user"=>$user ]);
        
+//every time a user views a post, the views table is updated increase view count by 1
+$views = Views::where('post_id', $post->id)->first();
+if(!$views){
 
-        $views = Views:: Create([
+        $views = Views:: updateOrCreate([
             'post_id' => $post->id,
             'views' => 1
         ]);
 
-        return response()->json($post);
+    }else{
+        $views->views = $views->views + 1;
+        $views->save();
+    }
+       
+    return response()->json($post);
     }
 
     /**
@@ -265,7 +273,7 @@ class PostController extends Controller
     {
        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->count();
 
-       $yesterdaysviews =  Views::whereDate('created_at',  Carbon::yesterday()->toDateString())->where('post_id', $post->id)->count();
+    //    $yesterdaysviews =  Views::whereDate('created_at',  Carbon::yesterday()->toDateString())->where('post_id', $post->id)->count();
 
        $date = Carbon::now()->subDays(7);
 
@@ -277,13 +285,15 @@ class PostController extends Controller
        $totalViews = Views::where('post_id', $post->id)->count();
 
        
-       
+       $date = Carbon::now()->subDays(5);
+         $Last_five_days = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->get();
+
        return response()->json([
            'todays_Views' => $todaysviews,
-           'yesterdays_Views' => $yesterdaysviews,
            'weekly_Views' => $weeklyViews,
            'mothly_Views' => $mothlyViews,
-           'total_Views' => $totalViews
+           'total_Views' => $totalViews,
+            'Last_five_days' => $Last_five_days
        ]);
 
     

@@ -102,9 +102,9 @@ class ProfileController extends Controller{
      */
     public function all_users(Profile $profile)
     {
-       $users = User::sum('subscribe');
-       $post = Post::count('user_id');
-       $like = Likes::count('like');
+       $users =  User::sum('subscribe');
+       $post  =  Post::count('user_id');
+       $like  =  Likes::count('like');
        
     
       
@@ -119,9 +119,8 @@ class ProfileController extends Controller{
          'Subscriber' => $users,
          'PostCount' => $post,
          'LikeCount' => $like, ]);
-       
-    
-    }
+      
+        }
 
 
     /**

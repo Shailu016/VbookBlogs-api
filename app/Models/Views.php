@@ -15,4 +15,14 @@ class Views extends Model
         'post_id',
         
     ];
+
+    //date format to be used
+    protected $casts = [
+        'created_at'  => 'date:Y-m-d',
+        'updated_at'  => 'date:Y-m-d',
+        
+    ];
+
+
+
 }
