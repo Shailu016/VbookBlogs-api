@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SiteController;
 
 
 /*
@@ -86,3 +87,7 @@ Route::post('/subscribe',[AuthController::class,'subscribe'])->middleware('auth:
 Route::get('/tagList',[PostController::class,'all_tags']);
 
 Route::get('/user_details',[ProfileController::class,'all_users']);
+
+
+Route::get('/get_domain',[SiteController::class,'index']);
+Route::post('/set_domain',[SiteController::class,'store']);
