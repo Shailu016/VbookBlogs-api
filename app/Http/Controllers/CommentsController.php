@@ -63,7 +63,9 @@ class CommentsController extends Controller
     public function delete(Comments $comments)
     { 
         $comments->delete();
-        return response()->json($comments);
+        return response()->json([
+            'message' => 'Comment deleted successfully',
+            'data' => $comments]);
     }
 
     

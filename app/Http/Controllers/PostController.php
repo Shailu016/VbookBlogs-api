@@ -112,7 +112,8 @@ class PostController extends Controller
         // "user"=>$user ]);
        
 //every time a user views a post, the views table is updated increase view count by 1
-$views = Views::where('post_id', $post->id)->first();
+$views = Views::where('post_id', $post->id)->whereDate('created_at',  Carbon::today()->toDateString())->first();
+
 if(!$views){
 
         $views = Views:: updateOrCreate([
