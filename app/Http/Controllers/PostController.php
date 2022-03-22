@@ -26,6 +26,7 @@ class PostController extends Controller
      */
     public function index(User $user)
     {
+      
         $user = User::where('slug', $user->slug)->first();
         //if no user found then
         if(!$user) {
@@ -112,9 +113,10 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post, Views $views, User $user)
+    public function show(User $user, Post $post)
     
     {
+       
         // $user = User::where('id', $post->user_id)->get();
        
         // return response()->json(["post"=>$post, 
@@ -135,6 +137,8 @@ if(!$views){
         $views->save();
     }
 
+    $user = User::where('slug', $user->slug)->first();
+    $post = Post::where('id', $post->id)->where('user_id', $user->id)->first();
    
        
     return response()->json($post);
