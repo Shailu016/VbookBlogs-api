@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Site;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class SiteController extends Controller
@@ -14,7 +15,8 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $site = Site::all();
+        $site = User::select('site')->get();
+        dd($site);
        
         return response()->json($site);
     }
@@ -35,10 +37,9 @@ class SiteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
-        $site = Site::create($request->all());
-        return response()->json($site);
+       dd($user->name);
     }
 
     /**

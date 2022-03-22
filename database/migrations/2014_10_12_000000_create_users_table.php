@@ -20,10 +20,12 @@ class CreateUsersTable extends Migration
             $table->string('token')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('status')->default(1);
+            $table->boolean('is_admin')->default(0);
             $table->string("youtube")->nullable();
             $table->string("facebook")->nullable();
             $table->string("instagram")->nullable();
+            $table->string("slug")->unique();
+            $table->string("site")->nullable();
             $table->boolean('subscribe')->default(0);
             $table->rememberToken();
             $table->timestamps();

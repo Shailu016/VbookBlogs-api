@@ -27,18 +27,29 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|confirmed|min:6',
+            'site' => 'nullable',
+          
         ]);
 
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
+            'site' =>request('site'),
         ]);
         $token = $user->createToken('auth_token')->plainTextToken;
-        if ($user->id == 1) {
+// if user site is not empty then make him admin
+
+       if($user->site != null) {
             //  $role = Role::create(['name' => 'admin']);
-            $permission = Permission::create(['name' => 'admin']);
+            $permission =Permission::where('name', 'admin')->first();
+            if(! $permission){
+
+                $permission = Permission::create(['name' => 'admin']);
+            }
+           
             $user->givePermissionTo('admin');
+            $user->update(['is_admin' => 1]);
             //  $user->assignRole('admin');
         }
 

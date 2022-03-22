@@ -35,9 +35,9 @@ Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function ()
 
 
 
-Route::get('post', [PostController::class, 'index']);
+Route::get('user/{user:slug}/posts', [PostController::class, 'index']);
 Route::get('/user_post',[PostController::class, 'usersPost'])->middleware('auth:sanctum');
-Route::get('post/{post}', [PostController::class, 'show']);
+Route::get('/post/{post}', [PostController::class, 'show']);
 Route::get('/all/{user}',[PostController::class,'user_all_post']);
 
 Route::get('/comments/{post}', [CommentsController::class, 'index']);

@@ -24,13 +24,22 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
+        $user = User::where('slug', $user->slug)->first();
+        //if no user found then
+        if(!$user) {
+            
+           return "User not found";
+        }else{
 
-     $post = Post::with('users')->get();
-     event(new PostPublished( $post));
-     return response()->json($post);
+            $post = Post::where('user_id', $user->id )->get();
+    
+         event(new PostPublished( $post));
+         return response()->json($post);
+        }
     } 
+
 
     /**
      * Show the form for creating a new resource.
@@ -103,7 +112,7 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post, Views $views)
+    public function show(Post $post, Views $views, User $user)
     
     {
         // $user = User::where('id', $post->user_id)->get();
@@ -125,6 +134,8 @@ if(!$views){
         $views->views = $views->views + 1;
         $views->save();
     }
+
+   
        
     return response()->json($post);
     }
@@ -284,6 +295,7 @@ if(!$views){
        $mothlyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
 
        $totalViews = Views::where('post_id', $post->id)->count();
+// noob application bana hai pls improve itna bura code kabi dekha nahi hai 
 
        
        $date = Carbon::now()->subDays(5);
