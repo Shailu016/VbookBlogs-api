@@ -20,6 +20,7 @@ use Spatie\Permission\Models\Permission;
 
 class AuthController extends Controller
 {
+    
     public function register(Request $request)
     {
 
@@ -42,7 +43,7 @@ class AuthController extends Controller
 
        if($user->site != null) {
             //  $role = Role::create(['name' => 'admin']);
-            $permission =Permission::where('name', 'admin')->first();
+            $permission = Permission::where('name', 'admin')->first();
             if(! $permission){
 
                 $permission = Permission::create(['name' => 'admin']);
@@ -189,4 +190,4 @@ class AuthController extends Controller
         
     
 }
-//newonewo
+

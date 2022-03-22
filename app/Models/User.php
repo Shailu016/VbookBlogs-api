@@ -42,6 +42,11 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+       
+            'created_at'  => 'date:d M Y',
+            'updated_at'  => 'date:d M Y',
+            
+        
     ];
 
     public function getSlugOptions() : SlugOptions
@@ -80,5 +85,6 @@ class User extends Authenticatable
     // }
 
     // users that follow this user
+   
   
 }
