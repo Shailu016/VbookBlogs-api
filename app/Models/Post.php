@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Nicolaslopezj\Searchable\SearchableTrait;
+
 use App\Models\User;
 use App\Models\Bookmark;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,16 +22,7 @@ class Post extends Model
     ];
     
 
-    protected $searchable = [
-        'columns' => [
-            'posts.body' => 9,
-            'posts.name' => 10,
-            'posts.id' => 3,
-        ],
-        'joins' => [
-            'posts' => ['users.id', 'posts.user_id'],
-        ],
-    ];
+    
 
     public function comments()
     {
@@ -55,6 +46,7 @@ class Post extends Model
     {
         return $this->bookmark->contains($user);
     }
+    
     
     
     
