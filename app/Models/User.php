@@ -85,6 +85,6 @@ class User extends Authenticatable
     // }
 
     // users that follow this user
-   
+    
   
 }

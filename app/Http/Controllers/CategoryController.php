@@ -8,11 +8,7 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function index()
     {
         $category = Category::all();
@@ -37,12 +33,12 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-      $validated =   $request->validate([
+      $validated =   $request->validate(
+          [
             'name' => 'required|unique:posts|max:255',
             'description' => 'nullable',
             
-
-        ]);
+          ]);
         
 
         $category = Category::create($validated );
@@ -63,13 +59,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        
-
-            return $category;
-        
-       
-    
-}
+        return $category;
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -108,14 +99,5 @@ class CategoryController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Category $category)
-    {
-        //
-    }
+
 }

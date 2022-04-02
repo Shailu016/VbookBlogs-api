@@ -22,12 +22,6 @@ class CommentsController extends Controller
     }
    
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Comments $comments, Post $post)
     {
         request()->validate([
@@ -37,33 +31,29 @@ class CommentsController extends Controller
        
         
     $comments = Comments::create([
-        //'user_id' => 1,
+       
      'user_id' => Auth::id(),
      "post_id" => $post->id,
-    'body' => request('body')
+     'body' => request('body')
    ]);
    
-  return response()->json($comments);
+    return response()->json($comments);
  
 }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Comment  $comment
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show(Comments $comments, Post $post)
     {
         $comments = Comments::where("post_id", $post->id)->first();
-      
         return response()->json($comments);
     }
 
+    
     public function delete(Comments $comments)
     { 
+        
         $comments->delete();
-        return response()->json([
+         return response()->json([
             'message' => 'Comment deleted successfully',
             'data' => $comments]);
     }

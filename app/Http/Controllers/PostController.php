@@ -28,15 +28,15 @@ class PostController extends Controller
     {
       
         $user = User::where('slug', $user->slug)->first();
-        //if no user found then
+       
         if(!$user) {
             
            return "User not found";
+
         }else{
 
             $post = Post::where('user_id', $user->id )->get();
-    
-         event(new PostPublished( $post));
+            //  event(new PostPublished( $post));
          return response()->json($post);
         }
     } 
@@ -114,18 +114,11 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(User $user, Post $post)
-    
     {
-       
-        // $user = User::where('id', $post->user_id)->get();
-       
-        // return response()->json(["post"=>$post, 
-        // "user"=>$user ]);
-       
-//every time a user views a post, the views table is updated increase view count by 1
-$views = Views::where('post_id', $post->id)->whereDate('created_at',  Carbon::today()->toDateString())->first();
+     
+     $views = Views::where('post_id', $post->id)->whereDate('created_at',  Carbon::today()->toDateString())->first();
 
-if(!$views){
+     if(!$views){
 
         $views = Views:: updateOrCreate([
             'post_id' => $post->id,
@@ -133,15 +126,14 @@ if(!$views){
         ]);
 
     }else{
+        
         $views->views = $views->views + 1;
         $views->save();
     }
 
-    $user = User::where('slug', $user->slug)->first();
-    $post = Post::where('id', $post->id)->where('user_id', $user->id)->first();
-   
-       
-    return response()->json($post);
+        $user = User::where('slug', $user->slug)->first();
+        $post = Post::where('id', $post->id)->where('user_id', $user->id)->first();
+         return response()->json($post);
     }
 
     /**
@@ -164,7 +156,7 @@ if(!$views){
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Post $post)
-    { {
+    { 
             $request->validate(
                 [
                     'name' => 'required',
@@ -194,12 +186,15 @@ if(!$views){
                     $post->image_path = $imagePath;
                 }
                 $post->save();
+
                 return response()->json($post);
+
             } catch (\Exception $e) {
+                
                 return $e->getMessage();
             }
         }
-    }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -207,27 +202,29 @@ if(!$views){
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
+
     public function delete(Post $post)
     {
+        
         $post->delete();
         return "Post deleted successfully";
+
     }
+
 
     public function restore(int $id)
     {
-        // Post::withTrashed()->find($post)->restore();
-        // return "Post restored successfully";
 
         $blog = Post::onlyTrashed()->findOrFail($id);
         
         if (!$blog) {
 
-          
-            return response()->json(['message' => 'Post not found'], 404);
-        }else{
-            $blog->restore();
-    
-            return response()->json($blog, 200);
+               return response()->json(['message' => 'Post not found'], 404);
+       
+            }else{
+            
+                $blog->restore();
+                return response()->json($blog, 200);
           
         }
 
@@ -239,14 +236,16 @@ if(!$views){
         return $post ;
     }
 
-   public function category(Category $category)
-   {
+   
+    public function category(Category $category)
+    {
          $post = Post::where('category_id', $category->id)->get();
          return $post;
-   }
+    }
 
-   public function statusUpdateDraft(Post $post)
-   {
+   
+    public function statusUpdateDraft(Post $post)
+    {
       
         $post=  $post->update(['status' => "Draft"]);
          return response()->json([
@@ -257,10 +256,11 @@ if(!$views){
        
     }
 
+    
     public function statusUpdateArchive(Post $post)
     {
         if($post->status == "published"){
-            $post=  $post->update(['status' => "Archive"]);
+
             return response()->json([
                 'message' => 'Post status updated successfully',
                 'post' => "Archived"
@@ -279,21 +279,22 @@ if(!$views){
        
     }
 
+    
     public function post_by_tags(Request $request)
     {
+        
         $post = Post::where('tags', 'like', '%' . $request->tags . '%')->get();
         return $post;
+
     }
 
     public function post_views(Post $post)
     {
-       $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->count();
-
-    //    $yesterdaysviews =  Views::whereDate('created_at',  Carbon::yesterday()->toDateString())->where('post_id', $post->id)->count();
-
-       $date = Carbon::now()->subDays(7);
-
-       $weeklyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
+      
+        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->count();
+         
+        $date = Carbon::now()->subDays(7);
+        $weeklyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
        
        $date = Carbon::now()->subDays(30);
        $mothlyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
@@ -318,20 +319,19 @@ if(!$views){
     
    public function all_tags()
    { 
-    //filter tags unique values
+    
     $tags = Post::select('tags')->get();
 
-    // foreach($tags as $tag){
-    //     $result[] = json_decode($tag->tags);
-    // }
-
     $result = $tags->map(function ($tag, $key) {
+
         return json_decode($tag->tags);
+
     });
     
     $data = array_values(array_unique(Arr::flatten($result)));
     
     return response([
+
         'data' => $data
     ]);
 

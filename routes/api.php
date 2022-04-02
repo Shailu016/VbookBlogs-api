@@ -24,34 +24,36 @@ use App\Http\Controllers\SiteController;
 |
 */
 
-// post routes
+//Admin permission
 Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function () {
-    //
+    
     Route::post('post/create', [PostController::class, 'store'])->middleware('auth:sanctum');
     Route::post('post/{post}/update', [PostController::class, 'update']);
     Route::delete('post/{post}/delete', [PostController::class, 'delete']);
     Route::patch('post/{post}/restore', [PostController::class, 'restore']);
 });
 
-
-
 Route::get('user/{user:slug}/posts', [PostController::class, 'index']);
 Route::get('/user_post',[PostController::class, 'usersPost'])->middleware('auth:sanctum');
 Route::get('user/{user:slug}/post/{post}', [PostController::class, 'show']);
-Route::get('/all/{user}',[PostController::class,'user_all_post']);
+
 
 Route::get('/comments/{post}', [CommentsController::class, 'index']);
 Route::post('post/{post}/comments', [CommentsController::class, 'store'])->middleware('auth:sanctum');
 Route::delete('comments/{comments}/delete', [CommentsController::class, 'delete']);
 
+
 Route::post('post/{post}/likes', [LikesController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/post/{post}/counts', [LikesController::class, 'count']);
 Route::get('/liked/{post}', [LikesController::class, 'userlike'])->middleware('auth:sanctum');
 
-Route::post('/search', [SearchController::class, 'search']);
+
+Route::post('user/{user:slug}/search', [SearchController::class, 'search']);
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::post('reset-password', [AuthController::class, 'reset']);
+Route::post('forgot-password', [AuthController::class, 'forgetPassword']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('profile', [AuthController::class, 'profile']);
@@ -61,8 +63,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('bookmark', [BookmarkController::class, 'get']);
     Route::get('check/bookmark', [BookmarkController::class, 'check']);
 });
-Route::post('reset-password', [AuthController::class, 'reset']);
-Route::post('forgot-password', [AuthController::class, 'forgetPassword']);
+
 
 
 Route::post("/userProfile", [AuthController::class, "userProfile"])->middleware('auth:sanctum');
@@ -91,3 +92,6 @@ Route::get('/user_details',[ProfileController::class,'all_users']);
 
 Route::get('/get_domain',[SiteController::class,'index']);
 Route::post('/set_domain',[SiteController::class,'store']);
+
+
+Route::get('/p/{post}',[LikesController::class,'lastfive']);
