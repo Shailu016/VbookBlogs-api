@@ -12,12 +12,6 @@ use DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-
-
-
-
-
-
 class AuthController extends Controller
 {
     

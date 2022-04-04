@@ -47,7 +47,10 @@ class Post extends Model
         return $this->bookmark->contains($user);
     }
     
-    
+    public function getImagePathAttribute($value)
+    {
+        return asset('images/' . $value);
+    }
     
     
 }
