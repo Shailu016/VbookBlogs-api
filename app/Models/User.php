@@ -85,6 +85,10 @@ class User extends Authenticatable
     // }
 
     // users that follow this user
+    public function getImagePathAttribute($value)
+    {
+        return asset('images/' . $value);
+    }
     
   
 }
