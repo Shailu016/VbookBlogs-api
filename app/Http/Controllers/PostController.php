@@ -35,8 +35,8 @@ class PostController extends Controller
 
         }else{
 
-            $post = Post::where('user_id', $user->id )->get();
-            //  event(new PostPublished( $post));
+            $post = Post::withcount('likes', 'comments')->where('user_id', $user->id )->get();
+            
          return response()->json($post);
         }
     } 

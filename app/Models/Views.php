@@ -23,6 +23,8 @@ class Views extends Model
         
     ];
 
+    
+
 
 
 }

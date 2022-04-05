@@ -20,18 +20,30 @@ class Post extends Model
         'image_path',
         'status',
     ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+       
+            'created_at'  => 'date:d M Y',
+            'updated_at'  => 'date:d M Y',
+            
+        
+    ];
     
 
     
 
     public function comments()
     {
-        return $this->hasMany(Comments::class);
+        return $this->hasMany(Comments::class, 'post_id');
     }
 
     public function likes()
     {
         return $this->hasMany(Likes::class, 'post_id');
+    }
+    public function views()
+    {
+        return $this->hasMany(Views::class, 'post_id');
     }
     public function users()
     {
@@ -57,5 +69,9 @@ class Post extends Model
         return json_decode($value);
     }
     
+    // public function getViewsAttribute()
+    // {
+    //     return $this->hasMany(Views::class, 'post_id')->sum();
+    // }
     
 }
