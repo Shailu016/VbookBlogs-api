@@ -51,6 +51,11 @@ class Post extends Model
     {
         return asset('images/' . $value);
     }
+
+    public function getTagsAttribute($value)
+    {
+        return json_decode($value);
+    }
     
     
 }
