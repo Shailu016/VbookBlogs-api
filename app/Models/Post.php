@@ -43,7 +43,7 @@ class Post extends Model
     }
     public function views()
     {
-        return $this->hasMany(Views::class, 'post_id');
+        return $this->hasMany(Views::class);
     }
     public function users()
     {
@@ -68,10 +68,13 @@ class Post extends Model
     {
         return json_decode($value);
     }
-    
-    // public function getViewsAttribute()
+    //get sum of views with post
+    // public function getViewsAttribute($value)
     // {
-    //     return $this->hasMany(Views::class, 'post_id')->sum();
+    //     return $this->views()->sum('views');
     // }
+
+    
+    
     
 }

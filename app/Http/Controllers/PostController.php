@@ -34,10 +34,11 @@ class PostController extends Controller
            return "User not found";
 
         }else{
+            
 
             $post = Post::withcount('likes', 'comments')->where('user_id', $user->id )->get();
-            
-         return response()->json($post);
+           
+           return response()->json($post);
         }
     } 
 
@@ -259,22 +260,30 @@ class PostController extends Controller
     
     public function statusUpdateArchive(Post $post)
     {
-        if($post->status == "published"){
-
-            return response()->json([
+        $post = Post::where('id', $post->id)->first();
+        if($post->status == "Draft"){
+            $post->update(['status' => "published"]);
+                return response()->json([
                 'message' => 'Post status updated successfully',
-                'post' => "Archived"
+                'post' => "published"
             
             ]);
-        }
-        else{
-            $post = $post->update(['status' => "published"]);
-            return response()->json([
-                'message' => 'Post status not updated',
+        }elseif ($post->status == "published") {
+            $post->update(['status' => "Archive"]);
+                return response()->json([
+                'message' => 'Post status updated successfully',
+                'post' => "Archive"
+            
+            ]);
+        }else{
+            $post->update(['status' => "Published"]);
+                return response()->json([
+                'message' => 'Post status updated successfully',
                 'post' => "Published"
             
             ]);
         }
+
         
        
     }
@@ -324,7 +333,7 @@ class PostController extends Controller
 
     $result = $tags->map(function ($tag, $key) {
 
-        return json_decode($tag->tags);
+        return ($tag->tags);
 
     });
     
