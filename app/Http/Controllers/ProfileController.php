@@ -65,4 +65,12 @@ class ProfileController extends Controller{
         }
 
 
+        public function  getUserProfile(User $user)
+        {
+            //
+
+
+        }
+
+
 }
