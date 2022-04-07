@@ -76,10 +76,16 @@ class AuthController extends Controller
         ]);
     }
 
-    public function profile(Request $request)
+    public function profile(User $user)
     {
-        $user = User::with('profiles')->where('id', Auth::id())->first();
-        return $user;
+        $user =User::where('slug', $user->slug)->firstOrFail();
+        
+
+            $user = User::with('profiles')->where('slug', $user->slug )->first();
+            return $user;
+        
+
+        
     }
 
     public function logout(Request $request)

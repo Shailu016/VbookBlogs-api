@@ -97,3 +97,4 @@ Route::post('/set_domain',[SiteController::class,'store']);
 Route::get('/p/{post}',[LikesController::class,'lastfive']);
 
 // Route::get('/UserProfile',[ProfileController::class,'getUserProfile']);
+Route::get("/user/{user:slug}/profile",[ProfileController::class, "getUserProfile"]);
