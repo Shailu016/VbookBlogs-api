@@ -68,7 +68,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::post("/userProfile", [AuthController::class, "userProfile"])->middleware('auth:sanctum');
 
-Route::get("/user/{user:slug}/profile",[AuthController::class, "profile"]);
+Route::get("/profile",[AuthController::class, "profile"])->middleware('auth:sanctum');
 Route::post("/upload",[ProfileController::class, "store"])->middleware('auth:sanctum');
 
 Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum');
