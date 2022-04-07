@@ -34,6 +34,7 @@ Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function ()
 });
 
 Route::get('user/{user:slug}/posts', [PostController::class, 'index']);
+Route::get('user/{user:slug}/publishedPosts', [PostController::class, 'publishedPost']);
 Route::get('/user_post',[PostController::class, 'usersPost'])->middleware('auth:sanctum');
 Route::get('user/{user:slug}/post/{post}', [PostController::class, 'show']);
 

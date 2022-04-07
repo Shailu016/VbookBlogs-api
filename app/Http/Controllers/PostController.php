@@ -346,6 +346,26 @@ class PostController extends Controller
 
    }
 
+   public function publishedPost(User $user)
+   {
+       
+      
+    $user = User::where('slug', $user->slug)->first();
+       
+    if(!$user) {
+        
+       return "User not found";
+
+    }else{
+        
+
+        $post = Post::where('status', 'Published')->where('user_id', $user->id )->get();
+        
+       
+       return response()->json($post);
+    }
+   }
+
 
    
 }
