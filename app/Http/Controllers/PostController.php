@@ -263,7 +263,7 @@ class PostController extends Controller
     
     public function statusUpdateArchive(Post $post)
     {
-        $post = Post::where('id', $post->id)->first();
+        $post = Post::withcount('likes', 'comments')->where('id', $post->id)->first();
         if($post->status == "Draft"){
             $post->update(['status' => "published"]);
                 return response()->json([
