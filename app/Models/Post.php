@@ -26,11 +26,12 @@ class Post extends Model
             'created_at'  => 'date:d M Y',
             'updated_at'  => 'date:d M Y',
             
+            
+        ];
+       
         
-    ];
-    
-
-    
+        
+       
 
     public function comments()
     {
@@ -68,13 +69,5 @@ class Post extends Model
     {
         return json_decode($value);
     }
-    //get sum of views with post
-    // public function getViewsAttribute($value)
-    // {
-    //     return $this->views()->sum('views');
-    // }
 
-    
-    
-    
 }

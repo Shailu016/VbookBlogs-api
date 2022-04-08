@@ -38,7 +38,9 @@ class PostController extends Controller
 
             $post = Post::withcount('likes', 'comments')->where('user_id', $user->id )->get();
            
-           return response()->json($post);
+            
+            
+             return response()->json($post);
         }
     } 
 
@@ -248,10 +250,11 @@ class PostController extends Controller
     public function statusUpdateDraft(Post $post)
     {
       
-        $post=  $post->update(['status' => "Draft"]);
+        $post =  $post->update(['status' => "Draft"]);
          return response()->json([
             'message' => 'Post status updated successfully',
-            'post' => "Draft"
+            'status' => "Draft",
+           
         
         ]);
        
@@ -265,21 +268,24 @@ class PostController extends Controller
             $post->update(['status' => "published"]);
                 return response()->json([
                 'message' => 'Post status updated successfully',
-                'post' => "published"
+                'status' => "published",
+                'post' => $post
             
             ]);
         }elseif ($post->status == "published") {
             $post->update(['status' => "Archive"]);
                 return response()->json([
                 'message' => 'Post status updated successfully',
-                'post' => "Archive"
+                'status' => "Archive",
+                'post' => $post
             
             ]);
         }else{
             $post->update(['status' => "Published"]);
                 return response()->json([
                 'message' => 'Post status updated successfully',
-                'post' => "Published"
+                'status' => "Published",
+                'post' => $post
             
             ]);
         }
