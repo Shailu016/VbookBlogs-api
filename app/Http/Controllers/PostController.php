@@ -34,15 +34,12 @@ class PostController extends Controller
            return "User not found";
 
         }else{
-            
 
             $post = Post::withcount('likes', 'comments')->where('user_id', $user->id )->get();
-           
-            
-            
-             return response()->json($post);
+
+            return response()->json($post);
         }
-    } 
+    }   
 
 
     /**

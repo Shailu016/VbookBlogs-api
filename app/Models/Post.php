@@ -28,10 +28,10 @@ class Post extends Model
             
             
         ];
-       
+        protected $appends = [
+            'views'
+        ];
         
-        
-       
 
     public function comments()
     {
@@ -68,6 +68,11 @@ class Post extends Model
     public function getTagsAttribute($value)
     {
         return json_decode($value);
+    }
+
+    public function getViewsAttribute()
+    {
+        return $this->hasMany(Views::class, 'post_id')->sum('views');
     }
 
 }
