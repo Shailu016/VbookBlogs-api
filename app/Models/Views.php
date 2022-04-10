@@ -18,8 +18,11 @@ class Views extends Model
 
     //date format to be used
     protected $casts = [
-        'created_at'  => 'date:Y-m-d',
-        'updated_at'  => 'date:Y-m-d',
+        
+       
+        'created_at'  => 'date:d M',
+        'updated_at'  => 'date:d M',
+        
         
     ];
 

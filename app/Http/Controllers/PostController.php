@@ -374,12 +374,11 @@ class PostController extends Controller
 
    public function postStats()
    { 
-    $post = Post::withcount('likes', 'comments')->get();
-    $date = Carbon::now()->subDays(5);
-    $Last_five_days = Views::whereDate('created_at', '>=', $date)->get();
+    $post = Post::with('views', 'likes')->withcount('likes', 'comments')->get();
+    
     return response()->json([
         'post' => $post,
-        'Last_five_days' => $Last_five_days
+        
     ]);
     
 
