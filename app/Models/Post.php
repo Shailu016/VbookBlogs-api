@@ -29,7 +29,8 @@ class Post extends Model
             
         ];
         protected $appends = [
-            'views'
+            'views',
+            
         ];
         
 
@@ -75,4 +76,6 @@ class Post extends Model
         return $this->hasMany(Views::class, 'post_id')->sum('views');
     }
 
+  
+   
 }

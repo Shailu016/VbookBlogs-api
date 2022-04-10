@@ -133,7 +133,8 @@ class PostController extends Controller
 
         $user = User::where('slug', $user->slug)->first();
         $post = Post::where('id', $post->id)->where('user_id', $user->id)->first();
-         return response()->json($post);
+         return response()->json(["psot" => $post,
+        "siteTitile" => $user->site]);
     }
 
     /**
@@ -369,6 +370,22 @@ class PostController extends Controller
     }
    }
 
+   //get all post with likes count views count of last 5 days
+
+   public function postStats()
+   { 
+    $post = Post::withcount('likes', 'comments')->get();
+    $date = Carbon::now()->subDays(5);
+    $Last_five_days = Views::whereDate('created_at', '>=', $date)->get();
+    return response()->json([
+        'post' => $post,
+        'Last_five_days' => $Last_five_days
+    ]);
+    
+
+   }
+
 
    
 }
+
