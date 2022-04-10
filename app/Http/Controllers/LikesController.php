@@ -12,28 +12,28 @@ class LikesController extends Controller
 {
     public function store(Post $post)
     {
-        // $like = Likes::where('user_id', Auth::id())->where('post_id', $post->id)->first();
+        $like = Likes::where('user_id', Auth::id())->where('post_id', $post->id)->first();
       
-        // if (!$like) {
+        if (!$like) {
 
-        //     $like=  likes::create([
-        //       'user_id' => Auth::id(),
-        //       'like'=>1,
-        //       'post_id'=> $post->id
-        //     ]);
+            $like=  likes::create([
+              'user_id' => Auth::id(),
+              'like'=>1,
+              'post_id'=> $post->id
+            ]);
 
-        //     return  $like ;
+            return  $like ;
 
-        // } else {
+        } else {
 
-        //     $like->delete();
-        // }
+            $like->delete();
+        }
         
-        // return response()->json([
-        //     'user_id' => Auth::id(),
-        //     'like'=>0,
-        //     'post_id'=> $post->id
-        //   ]);
+        return response()->json([
+            'user_id' => Auth::id(),
+            'like'=>0,
+            'post_id'=> $post->id
+          ]);
         
     }
 
