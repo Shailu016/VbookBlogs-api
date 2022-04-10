@@ -179,8 +179,30 @@ class AuthController extends Controller
                 'data' =>   $user
             ]);
         }
+        
+
     }
+    public function is_subscribe(User $user)
+    {
+        $user = User::where('id', Auth::id())->first();
+        
+
+    if($user->subscribe !== 1){
+        return response()->json([
+            'message' => 'User not subscribed',
+            'data' =>   $user
+        ]);
        
+    }else{
+        return response()->json([
+            'message' => 'User subscribed',
+            'data' =>   $user
+        ]);
+    
+    }
+   
+    
+    }
         
     
 }
