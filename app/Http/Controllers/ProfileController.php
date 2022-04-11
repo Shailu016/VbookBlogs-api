@@ -50,15 +50,20 @@ class ProfileController extends Controller{
 }
 
   
-    public function all_users(Profile $profile)
+    public function all_users(User $user)
     {
-       $users =  User::sum('subscribe');
-       $post  =  Post::count('user_id');
-       $like  =  Likes::count('like');
+        $user = User::where('slug', $user->slug)->first();
+        
+        
+        $user =  User::withcount('posts')->where('id', $user->id )->sum('subscribe');
+       
+        $post  =  Post::where('user_id', $user->id )->sum('user_id');
+        dd(  $post );
+       $like  =  Likes::where('user_id', $user->id )->count('like');
       
        return response()->json([
 
-         'Subscriber' => $users,
+         'Subscriber' => $user,
          'PostCount' => $post,
          'LikeCount' => $like, ]);
       

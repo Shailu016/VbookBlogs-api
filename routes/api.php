@@ -88,7 +88,7 @@ Route::get('post/views/',[PostController::class,'post_views']);
 Route::post('/subscribe',[AuthController::class,'subscribe'])->middleware('auth:sanctum');
 Route::get('/tagList',[PostController::class,'all_tags']);
 
-Route::get('/user_details',[ProfileController::class,'all_users']);
+Route::get('user/{user:slug}/user_details',[ProfileController::class,'all_users'])->middleware('auth:sanctum');
 
 
 Route::get('/get_domain',[SiteController::class,'index']);

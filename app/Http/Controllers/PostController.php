@@ -366,9 +366,10 @@ class PostController extends Controller
 
    //get all post with likes count views count of last 5 days
 
-   public function postStats()
+   public function postStats(User $user)
    { 
-    $post = Post::with('views', 'likes','users')->withcount('likes', 'comments')->get();
+    $user = User::where('slug', $user->slug)->first();
+    $post = Post::where('user_id', $user->id)->with('views', 'likes','users')->withcount('likes', 'comments')->get();
     
     return response()->json([
         'post' => $post,
