@@ -52,20 +52,23 @@ class ProfileController extends Controller{
   
     public function all_users(User $user)
     {
-        $user = User::where('slug', $user->slug)->first();
+        $user = User::where('id', Auth::id())->where('slug', $user->slug)->first();
         
         
-        $user =  User::withcount('posts')->where('id', $user->id )->sum('subscribe');
+        $user =  User::where('id', $user->id )->sum('subscribe');
+        
+        //get users posts count
        
-        $post  =  Post::where('user_id', $user->id )->sum('user_id');
-        dd(  $post );
-       $like  =  Likes::where('user_id', $user->id )->count('like');
+       
+        
       
        return response()->json([
 
          'Subscriber' => $user,
-         'PostCount' => $post,
-         'LikeCount' => $like, ]);
+        
+          
+            
+         ]);
       
         }
 

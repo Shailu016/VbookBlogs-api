@@ -87,6 +87,9 @@ class User extends Authenticatable
     // users that follow this user
     public function getImagePathAttribute($value)
     {
+        if(!$value) {
+            return asset('https://i.ibb.co/TPmLQyP/user.png');
+        }
         return asset('images/' . $value);
     }
     
