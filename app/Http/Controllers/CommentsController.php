@@ -50,13 +50,21 @@ class CommentsController extends Controller
 
     
     public function delete(Comments $comments)
+
     { 
+     $user = User::Where('id', Auth::id())->first();
+     if($user->id == $comments->user_id || $user->is_admin == 1){
+            
         
         $comments->delete();
          return response()->json([
             'message' => 'Comment deleted successfully',
             'data' => $comments]);
     }
+    return "you are not authorized to delete this comment";
+    }
+
+    
 
     
    
