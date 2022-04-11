@@ -296,30 +296,29 @@ class PostController extends Controller
 
     }
 
-    public function post_views(Post $post)
+    public function post_views()
     {
       
-        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->sum('views');
+        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->sum('views');
          
         $date = Carbon::now()->subDays(7);
-        $weeklyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->sum('views');
+        $weeklyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
        
        $date = Carbon::now()->subDays(30);
-       $mothlyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->sum('views');
+       $mothlyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
 
-       $totalViews = Views::where('post_id', $post->id)->sum('views');
+       $totalViews = Views::sum('views');
 // noob application bana hai pls improve itna bura code kabi dekha nahi hai 
 
        
-       $date = Carbon::now()->subDays(5);
-         $Last_five_days = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->get();
+    ;
 
        return response()->json([
            'todays_Views' => $todaysviews,
            'weekly_Views' => $weeklyViews,
            'mothly_Views' => $mothlyViews,
            'total_Views' => $totalViews,
-            'Last_five_days' => $Last_five_days
+           
        ]);
 
     

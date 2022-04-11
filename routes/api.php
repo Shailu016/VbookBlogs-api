@@ -84,7 +84,7 @@ Route::post('/post/{post}/update/status_archive',[PostController::class,'statusU
 
 
 Route::post('/post/tags',[PostController::class,'post_by_tags']);
-Route::get('post/{post}/views/',[PostController::class,'post_views']);
+Route::get('post/views/',[PostController::class,'post_views']);
 Route::post('/subscribe',[AuthController::class,'subscribe'])->middleware('auth:sanctum');
 Route::get('/tagList',[PostController::class,'all_tags']);
 
