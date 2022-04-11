@@ -35,7 +35,7 @@ class PostController extends Controller
 
         }else{
 
-            $post = Post::withcount('likes', 'comments')->where('user_id', $user->id )->get();
+            $post = Post::with('users')->withcount('likes', 'comments')->where('user_id', $user->id )->get();
 
             return response()->json($post);
         }
@@ -94,11 +94,6 @@ class PostController extends Controller
           
             $posts->save();
             
-            $user = User::where('id', Auth::id())->where('subscribe', 1)->first();
-            if($user){
-
-                $user->notify(new PostCreated('New Post Created'));
-            }
             return response()->json($posts); 
           
         } catch (\Exception $e) {
@@ -132,8 +127,8 @@ class PostController extends Controller
     }
 
         $user = User::where('slug', $user->slug)->first();
-        $post = Post::where('id', $post->id)->where('user_id', $user->id)->first();
-         return response()->json(["psot" => $post,
+        $post = Post::with('users')->where('id', $post->id)->where('user_id', $user->id)->first();
+         return response()->json(["post" => $post,
         "siteTitile" => $user->site]);
     }
 
@@ -304,15 +299,15 @@ class PostController extends Controller
     public function post_views(Post $post)
     {
       
-        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->count();
+        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->where('post_id', $post->id)->sum('views');
          
         $date = Carbon::now()->subDays(7);
-        $weeklyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
+        $weeklyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->sum('views');
        
        $date = Carbon::now()->subDays(30);
-       $mothlyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->count();
+       $mothlyViews = Views::whereDate('created_at', '>=', $date)->where('post_id', $post->id)->sum('views');
 
-       $totalViews = Views::where('post_id', $post->id)->count();
+       $totalViews = Views::where('post_id', $post->id)->sum('views');
 // noob application bana hai pls improve itna bura code kabi dekha nahi hai 
 
        
@@ -374,7 +369,7 @@ class PostController extends Controller
 
    public function postStats()
    { 
-    $post = Post::with('views', 'likes')->withcount('likes', 'comments')->get();
+    $post = Post::with('views', 'likes','users')->withcount('likes', 'comments')->get();
     
     return response()->json([
         'post' => $post,
