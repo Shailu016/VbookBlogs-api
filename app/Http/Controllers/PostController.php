@@ -324,10 +324,11 @@ class PostController extends Controller
     
     }
     
-   public function all_tags()
+   public function all_tags(User $user)
    { 
-    
-    $tags = Post::select('tags')->get();
+
+     $user = User::where('slug', $user->slug)->first();
+    $tags = Post::where('user_id',  $user->id )->select('tags')->get();
 
     $result = $tags->map(function ($tag, $key) {
 
