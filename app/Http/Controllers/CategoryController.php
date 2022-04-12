@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    
     public function index()
     {
         $category = Category::all();
@@ -33,15 +32,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-      $validated =   $request->validate(
-          [
+        $validated =   $request->validate(
+            [
             'name' => 'required|unique:posts|max:255',
             'description' => 'nullable',
             
-          ]);
+          ]
+        );
         
 
-        $category = Category::create($validated );
+        $category = Category::create($validated);
 
         return response()->json([
 
@@ -70,7 +70,6 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-       
     }
 
     /**
@@ -86,18 +85,13 @@ class CategoryController extends Controller
 
             'name' => $request->name,
             'description' => $request->description,
-            
-        ];
-    $category->update($a);
+];
+        $category->update($a);
 
-            
-        
-        
+
         return response()->json([
             'message' => 'category updated succesfully',
             'data' =>  $a
         ]);
     }
-
-
 }

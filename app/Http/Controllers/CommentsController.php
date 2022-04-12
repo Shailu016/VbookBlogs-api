@@ -30,16 +30,16 @@ class CommentsController extends Controller
         ]);
        
         
-    $comments = Comments::create([
+        $comments = Comments::create([
        
      'user_id' => Auth::id(),
      "post_id" => $post->id,
      'body' => request('body')
    ]);
    
-    return response()->json($comments);
- 
-}
+   
+        return response()->json($comments->load('users'));
+    }
 
    
     public function show(Comments $comments, Post $post)
@@ -50,22 +50,14 @@ class CommentsController extends Controller
 
     
     public function delete(Comments $comments)
-
-    { 
-     $user = User::Where('id', Auth::id())->first();
-     if($user->id == $comments->user_id || $user->is_admin == 1){
-            
-        
-        $comments->delete();
-         return response()->json([
+    {
+        $user = User::Where('id', Auth::id())->first();
+        if ($user->id == $comments->user_id || $user->is_admin == 1) {
+            $comments->delete();
+            return response()->json([
             'message' => 'Comment deleted successfully',
             'data' => $comments]);
+        }
+        return "you are not authorized to delete this comment";
     }
-    return "you are not authorized to delete this comment";
-    }
-
-    
-
-    
-   
 }
