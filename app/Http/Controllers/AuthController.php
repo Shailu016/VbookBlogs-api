@@ -159,50 +159,7 @@ class AuthController extends Controller
         }
     }
 
-    public function subscribe()
-   {
-       $user = User::where('id', Auth::id())->first();
-      if($user->subscribe == 0){
-          $user->update([
-              'subscribe' => 1,
-          ]);
-          return response()->json([
-              'message' => 'User subscribed successfully',
-              'data' =>   $user
-          ]);
-        }else{
-            $user->update([
-                'subscribe' => 0,
-            ]);
-            return response()->json([
-                'message' => 'User unsubscribed successfully',
-                'data' =>   $user
-            ]);
-        }
-        
-
-    }
-    public function is_subscribe(User $user)
-    {
-        $user = User::where('id', Auth::id())->first();
-        
-
-    if($user->subscribe !== 1){
-        return response()->json([
-            'message' => 'User not subscribed',
-            'data' =>   $user
-        ]);
-       
-    }else{
-        return response()->json([
-            'message' => 'User subscribed',
-            'data' =>   $user
-        ]);
     
-    }
-   
-    
-    }
         
     
 }

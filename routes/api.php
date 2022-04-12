@@ -11,6 +11,7 @@ use App\Http\Controllers\BookmarkController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\SubscribeController;
 
 
 /*
@@ -37,6 +38,13 @@ Route::get('user/{user:slug}/posts', [PostController::class, 'index']);
 Route::get('user/{user:slug}/publishedPosts', [PostController::class, 'publishedPost']);
 Route::get('/user_post',[PostController::class, 'usersPost'])->middleware('auth:sanctum');
 Route::get('user/{user:slug}/post/{post}', [PostController::class, 'show']);
+// Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum');
+Route::post('/post/{post}/update/status_draft',[PostController::class,'statusUpdateDraft']);
+Route::post('/post/{post}/update/status_archive',[PostController::class,'statusUpdateArchive']);
+Route::post('/post/tags',[PostController::class,'post_by_tags']);
+Route::get('/post/views',[PostController::class,'post_views']);
+Route::get('/user/{user:slug}/tagList',[PostController::class,'all_tags']);
+Route::get('user/{user:slug}/postStats', [PostController::class, 'postStats']);
 
 
 Route::get('/comments/{post}', [CommentsController::class, 'index']);
@@ -47,9 +55,11 @@ Route::delete('comments/{comments}/delete', [CommentsController::class, 'delete'
 Route::post('post/{post}/likes', [LikesController::class, 'store'])->middleware('auth:sanctum');
 Route::get('/post/{post}/counts', [LikesController::class, 'count']);
 Route::get('/liked/{post}', [LikesController::class, 'userlike'])->middleware('auth:sanctum');
+Route::get('/post_like/{post}',[LikesController::class,'lastfive']);
 
 
 Route::post('user/{user:slug}/search', [SearchController::class, 'search']);
+
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
@@ -59,45 +69,41 @@ Route::post('forgot-password', [AuthController::class, 'forgetPassword']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('profile', [AuthController::class, 'profile']);
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('post/{post}/bookmark', [BookmarkController::class, 'add']);
-    Route::delete('post/{post}/bookmark', [BookmarkController::class, 'remove']);
-    Route::get('bookmark', [BookmarkController::class, 'get']);
     Route::get('check/bookmark', [BookmarkController::class, 'check']);
+    Route::get("/profile",[AuthController::class, "profile"]);
+    Route::post("/userProfile", [AuthController::class, "userProfile"]);
+    Route::get('/IsSubscribe',[AuthController::class,'is_subscribe']);
 });
 
+// Route::post('post/{post}/bookmark', [BookmarkController::class, 'add']);
+// Route::delete('post/{post}/bookmark', [BookmarkController::class, 'remove']);
+// Route::get('bookmark', [BookmarkController::class, 'get']);
 
 
-Route::post("/userProfile", [AuthController::class, "userProfile"])->middleware('auth:sanctum');
 
-Route::get("/profile",[AuthController::class, "profile"])->middleware('auth:sanctum');
 Route::post("/upload",[ProfileController::class, "store"])->middleware('auth:sanctum');
-
-Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum');
-
-Route::post('/category/create',[CategoryController::class,'store']);
-Route::post('/category/{category}/update',[CategoryController::class,'update']);
-Route::get('/category',[CategoryController::class,'index']);
-Route::get('/category/{category}',[CategoryController::class,'show']);
-
-Route::post('/post/{post}/update/status_draft',[PostController::class,'statusUpdateDraft']);
-Route::post('/post/{post}/update/status_archive',[PostController::class,'statusUpdateArchive']);
-
-
-Route::post('/post/tags',[PostController::class,'post_by_tags']);
-Route::get('post/views/',[PostController::class,'post_views']);
-Route::post('/subscribe',[AuthController::class,'subscribe'])->middleware('auth:sanctum');
-Route::get('/user/{user:slug}/tagList',[PostController::class,'all_tags']);
-
 Route::get('user/{user:slug}/user_details',[ProfileController::class,'all_users'])->middleware('auth:sanctum');
+Route::get("/user/{user:slug}/profile",[ProfileController::class, "getUserProfile"]);
+
+
+// Route::post('/category/create',[CategoryController::class,'store']);
+// Route::post('/category/{category}/update',[CategoryController::class,'update']);
+// Route::get('/category',[CategoryController::class,'index']);
+// Route::get('/category/{category}',[CategoryController::class,'show']);
+
+
+
+Route::post('user/{user:slug}/subscribe',[SubscribeController::class,'subscribe'])->middleware('auth:sanctum');
+Route::post('user/{user:slug}/unsubscribe',[SubscribeController::class,'unSubscribe'])->middleware('auth:sanctum');
+
+
 
 
 Route::get('/get_domain',[SiteController::class,'index']);
 Route::post('/set_domain',[SiteController::class,'store']);
 
 
-Route::get('/p/{post}',[LikesController::class,'lastfive']);
 
-// Route::get('/UserProfile',[ProfileController::class,'getUserProfile']);
-Route::get("/user/{user:slug}/profile",[ProfileController::class, "getUserProfile"]);
-Route::get('user/{user:slug}/postStats', [PostController::class, 'postStats']);
-Route::get('/IsSubscribe',[AuthController::class,'is_subscribe'])->middleware('auth:sanctum');
+
+
+

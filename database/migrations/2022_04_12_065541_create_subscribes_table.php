@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUserProfileColumnInPostsTable extends Migration
+class CreateSubscribesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class AddUserProfileColumnInPostsTable extends Migration
      */
     public function up()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->string("user_profile")->nullable();
+        Schema::create('subscribes', function (Blueprint $table) {
+            $table->id();
+            $table->integer('admin_id');
+            $table->integer('user_id');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ class AddUserProfileColumnInPostsTable extends Migration
      */
     public function down()
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->string("user_profile")->nullable();
-        });
+        Schema::dropIfExists('subscribes');
     }
 }

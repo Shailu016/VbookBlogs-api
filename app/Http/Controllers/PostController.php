@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use App\Events\PostPublished;
 use App\Notifications\PostCreated;
-use Carbon\Carbon; 
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
-
 
 class PostController extends Controller
 {
@@ -26,20 +25,10 @@ class PostController extends Controller
      */
     public function index(User $user)
     {
-      
-        $user = User::where('slug', $user->slug)->first();
-       
-        if(!$user) {
-            
-           return "User not found";
+        $post = Post::with('users')->withcount('likes', 'comments')->where('user_id', $user->id)->get();
 
-        }else{
-
-            $post = Post::with('users')->withcount('likes', 'comments')->where('user_id', $user->id )->get();
-
-            return response()->json($post);
-        }
-    }   
+        return response()->json($post);
+    }
 
 
     /**
@@ -63,29 +52,23 @@ class PostController extends Controller
                 'excerpt' => 'required',
                 'body' => 'required',
                 'image' => 'mimes:jpg,png,jpeg,webp|max:50480'
-                
 
             ]
         );
 
         try {
-            
-
-            
-            if(isset($request->image)) {
-
+            if (isset($request->image)) {
                 $imagePath = time() . $request->name . '.'. $request->image->extension();
                 $request->image->move(public_path('images'), $imagePath);
                 
                 $user = User::where('id', Auth::id())->first();
-           
             }
            
             $posts = new Post();
             $posts->name = request('name');
             $posts->excerpt = request('excerpt');
             $posts->body = request('body');
-            $posts->tags = strtolower(  json_encode(request('tags')));
+            $posts->tags = strtolower(json_encode(request('tags')));
             
             $posts->image_path = $imagePath ?? null;
            
@@ -94,10 +77,8 @@ class PostController extends Controller
           
             $posts->save();
             
-            return response()->json($posts); 
-          
+            return response()->json($posts);
         } catch (\Exception $e) {
-
             return $e->getMessage();
         }
     }
@@ -110,25 +91,21 @@ class PostController extends Controller
      */
     public function show(User $user, Post $post)
     {
-     
-     $views = Views::where('post_id', $post->id)->whereDate('created_at',  Carbon::today()->toDateString())->first();
+        $views = Views::where('post_id', $post->id)->whereDate('created_at', Carbon::today()->toDateString())->first();
 
-     if(!$views){
-
-        $views = Views:: updateOrCreate([
-            'post_id' => $post->id,
-            'views' => 1
-        ]);
-
-    }else{
-        
-        $views->views = $views->views + 1;
-        $views->save();
-    }
+        if (!$views) {
+            $views = Views::updateOrCreate([
+                'post_id' => $post->id,
+                'views' => 1
+            ]);
+        } else {
+            $views->views = $views->views + 1;
+            $views->save();
+        }
 
         $user = User::where('slug', $user->slug)->first();
         $post = Post::with('users')->where('id', $post->id)->where('user_id', $user->id)->first();
-         return response()->json(["post" => $post,
+        return response()->json(["post" => $post,
         "siteTitile" => $user->site]);
     }
 
@@ -152,44 +129,41 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Post $post)
-    { 
-            $request->validate(
-                [
+    {
+        $request->validate(
+            [
                     'name' => 'required',
                     'excerpt' => 'required',
                     'body' => 'required',
                     'image' => 'mimes:jpg,png,jpeg,webp|max:50480'
 
                 ]
-            );
-            try {
+        );
+        try {
+            $post->name = request('name');
+            $post->excerpt = request('excerpt');
+            $post->body = request('body');
+            $post->category_id = request('category_id');
 
-                $post->name = request('name');
-                $post->excerpt = request('excerpt');
-                $post->body = request('body');
-                $post->category_id = request('category_id');
 
+            if (request()->hasFile('image')) {
+                $imagePath = time() . $request->name . '.' . $request->image->extension();
+                $request->image->move(public_path('images'), $imagePath);
+                $oldImagePath = public_path('images') . "\\" . $post->image_path;
 
-                if (request()->hasFile('image')) {
-                    $imagePath = time() . $request->name . '.' . $request->image->extension();
-                    $request->image->move(public_path('images'), $imagePath);
-                    $oldImagePath = public_path('images') . "\\" . $post->image_path;
-
-                    if (File::exists($oldImagePath)) {
-                        File::delete($oldImagePath);
-                    }
-
-                    $post->image_path = $imagePath;
+                if (File::exists($oldImagePath)) {
+                    File::delete($oldImagePath);
                 }
-                $post->save();
 
-                return response()->json($post);
-
-            } catch (\Exception $e) {
-                
-                return $e->getMessage();
+                $post->image_path = $imagePath;
             }
+            $post->save();
+
+            return response()->json($post);
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
+    }
     
 
     /**
@@ -201,29 +175,21 @@ class PostController extends Controller
 
     public function delete(Post $post)
     {
-        
         $post->delete();
         return "Post deleted successfully";
-
     }
 
 
     public function restore(int $id)
     {
-
         $blog = Post::onlyTrashed()->findOrFail($id);
         
         if (!$blog) {
-
-               return response()->json(['message' => 'Post not found'], 404);
-       
-            }else{
-            
-                $blog->restore();
-                return response()->json($blog, 200);
-          
+            return response()->json(['message' => 'Post not found'], 404);
+        } else {
+            $blog->restore();
+            return response()->json($blog, 200);
         }
-
     }
 
     public function usersPost()
@@ -235,152 +201,122 @@ class PostController extends Controller
    
     public function category(Category $category)
     {
-         $post = Post::where('category_id', $category->id)->get();
-         return $post;
+        $post = Post::where('category_id', $category->id)->get();
+        return $post;
     }
 
    
     public function statusUpdateDraft(Post $post)
     {
-      
         $post =  $post->update(['status' => "Draft"]);
-         return response()->json([
+        return response()->json([
             'message' => 'Post status updated successfully',
             'status' => "Draft",
            
         
         ]);
-       
     }
 
     
     public function statusUpdateArchive(Post $post)
     {
         $post = Post::withcount('likes', 'comments')->where('id', $post->id)->first();
-        if($post->status == "Draft"){
+        if ($post->status == "Draft") {
             $post->update(['status' => "published"]);
-                return response()->json([
+            return response()->json([
                 'message' => 'Post status updated successfully',
                 'status' => "published",
                 'post' => $post
             
             ]);
-        }elseif ($post->status == "published") {
+        } elseif ($post->status == "published") {
             $post->update(['status' => "Archive"]);
-                return response()->json([
+            return response()->json([
                 'message' => 'Post status updated successfully',
                 'status' => "Archive",
                 'post' => $post
             
             ]);
-        }else{
+        } else {
             $post->update(['status' => "published"]);
-                return response()->json([
+            return response()->json([
                 'message' => 'Post status updated successfully',
                 'status' => "published",
                 'post' => $post
             
             ]);
         }
-
-        
-       
     }
 
     
     public function post_by_tags(Request $request)
     {
-        
         $post = Post::where('tags', 'like', '%' . $request->tags . '%')->get();
         return $post;
-
     }
 
     public function post_views()
     {
-      
-        $todaysviews =  Views::whereDate('created_at',  Carbon::today()->toDateString())->sum('views');
+        $todaysviews =  Views::whereDate('created_at', Carbon::today()->toDateString())->sum('views');
          
         $date = Carbon::now()->subDays(7);
         $weeklyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
        
-       $date = Carbon::now()->subDays(30);
-       $mothlyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
+        $date = Carbon::now()->subDays(30);
+        $mothlyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
 
-       $totalViews = Views::sum('views');
-// noob application bana hai pls improve itna bura code kabi dekha nahi hai 
-
-       
-    ;
-
-       return response()->json([
+        $totalViews = Views::sum('views');
+        
+        return response()->json([
            'todays_Views' => $todaysviews,
            'weekly_Views' => $weeklyViews,
            'mothly_Views' => $mothlyViews,
            'total_Views' => $totalViews,
            
        ]);
-
-    
     }
     
-   public function all_tags(User $user)
-   { 
+    public function all_tags(User $user)
+    {
+        $user = User::where('slug', $user->slug)->first();
+        $tags = Post::where('user_id', $user->id)->select('tags')->get();
 
-     $user = User::where('slug', $user->slug)->first();
-    $tags = Post::where('user_id',  $user->id )->select('tags')->get();
-
-    $result = $tags->map(function ($tag, $key) {
-
-        return ($tag->tags);
-
-    });
+        $result = $tags->map(function ($tag, $key) {
+            return ($tag->tags);
+        });
     
-    $data = array_values(array_unique(Arr::flatten($result)));
+        $data = array_values(array_unique(Arr::flatten($result)));
     
-    return response([
+        return response([
 
         'data' => $data
     ]);
-
-   }
-
-   public function publishedPost(User $user)
-   {
-       
-      
-    $user = User::where('slug', $user->slug)->first();
-       
-    if(!$user) {
-        
-       return "User not found";
-
-    }else{
-        
-
-        $post = Post::where('status', 'Published')->where('user_id', $user->id )->get();
-        
-       
-       return response()->json($post);
     }
-   }
 
-   //get all post with likes count views count of last 5 days
+    public function publishedPost(User $user)
+    {
+        $user = User::where('slug', $user->slug)->first();
+       
+        if (!$user) {
+            return "User not found";
+        } else {
+            $post = Post::where('status', 'Published')->where('user_id', $user->id)->get();
+        
+       
+            return response()->json($post);
+        }
+    }
 
-   public function postStats(User $user)
-   { 
-    $user = User::where('slug', $user->slug)->first();
-    $post = Post::where('user_id', $user->id)->with('views', 'likes','users')->withcount('likes', 'comments')->get();
+    //get all post with likes count views count of last 5 days
+
+    public function postStats(User $user)
+    {
+        $user = User::where('slug', $user->slug)->first();
+        $post = Post::where('user_id', $user->id)->with('views', 'likes', 'users')->withcount('likes', 'comments')->get();
     
-    return response()->json([
+        return response()->json([
         'post' => $post,
         
     ]);
-    
-
-   }
-
-
-   
+    }
 }
-

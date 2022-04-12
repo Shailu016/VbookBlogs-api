@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Subscribe;
 use App\Models\Likes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
@@ -55,34 +56,20 @@ class ProfileController extends Controller{
         $user = User::where('id', Auth::id())->where('slug', $user->slug)->first();
         
         
-        $user =  User::where('id', $user->id )->sum('subscribe');
-        
-        //get users posts count
-       
-       
-        
-      
-       return response()->json([
-
-         'Subscriber' => $user,
-        
-          
-            
-         ]);
+        $user =  Subscribe::where('admin_id', $user->id )->count('user_id');
+         
+        return response()->json(['Subscriber' => $user]);
       
         }
-
-
-       
-        
-         public function getUserProfile(User $user)
-        {
+    
+    public function getUserProfile(User $user)
+    {
             
-                $user =User::where('slug', $user->slug)->firstOrFail();
-                 $user = User::with('profiles')->where('slug', $user->slug )->first();
-                    return $user;
+        $user =User::where('slug', $user->slug)->firstOrFail();
+        $user = User::with('profiles')->where('slug', $user->slug )->first();
+         return $user;
 
-        }
+    }
 
 
 }
