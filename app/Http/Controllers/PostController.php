@@ -266,7 +266,6 @@ class PostController extends Controller
         $mothlyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
 
         $totalViews = Views::sum('views');
-        
         return response()->json([
            'todays_Views' => $todaysviews,
            'weekly_Views' => $weeklyViews,

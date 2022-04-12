@@ -11,34 +11,33 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 
-
-class ProfileController extends Controller{
-   
+class ProfileController extends Controller
+{
     public function store(Request $request)
     {
-            $user = User::where('id', Auth::id())->first();     
-            $user->name = request('name');
-            $user->youtube = request('youtube');
-            $user->facebook = request('facebook');
-            $user->instagram = request('instagram');
-            $user->bio = request('bio');
+        $user = User::where('id', Auth::id())->first();
+        $user->name = request('name');
+        $user->youtube = request('youtube');
+        $user->facebook = request('facebook');
+        $user->instagram = request('instagram');
+        $user->bio = request('bio');
            
             
 
-                if (request()->hasFile('image')) {
-                    $imagePath = time() . $request->name . '.' . $request->image->extension();
-                    $request->image->move(public_path('images'), $imagePath);
-                    $oldImagePath = public_path('images') . "\\" . $user->image_path;
+        if (request()->hasFile('image')) {
+            $imagePath = time() . $request->name . '.' . $request->image->extension();
+            $request->image->move(public_path('images'), $imagePath);
+            $oldImagePath = public_path('images') . "\\" . $user->image_path;
 
-                    if (File::exists($oldImagePath)) {
-                        File::delete($oldImagePath);
-                    }
+            if (File::exists($oldImagePath)) {
+                File::delete($oldImagePath);
+            }
 
-                    $user->image_path = $imagePath;
-                }
-                $user->save();
+            $user->image_path = $imagePath;
+        }
+        $user->save();
                 
-               return  response()->json([
+        return  response()->json([
                    "name" => $user->name,
                    "image_path" => $user->image_path,
                    "youtube" => $user->youtube,
@@ -46,30 +45,28 @@ class ProfileController extends Controller{
                    "instagram" => $user->instagram,
                    "bio" => $user->bio,
                ]);
-            
-           
-}
+    }
 
   
     public function all_users(User $user)
     {
-        $user = User::where('id', Auth::id())->where('slug', $user->slug)->first();
+        $post = $user->posts->count();
+        //get admins like count
+        $likes = Likes::where('user_id', $user->id)->count();
         
+        $user =  Subscribe::where('admin_id', $user->id)->count('user_id');
         
-        $user =  Subscribe::where('admin_id', $user->id )->count('user_id');
-         
-        return response()->json(['Subscriber' => $user]);
-      
-        }
+        return response()->json([
+            'post' => $post,
+            'like' => $likes,
+            'subscriber' => $user
+        ]);
+    }
     
     public function getUserProfile(User $user)
     {
-            
         $user =User::where('slug', $user->slug)->firstOrFail();
-        $user = User::with('profiles')->where('slug', $user->slug )->first();
-         return $user;
-
+        $user = User::with('profiles')->where('slug', $user->slug)->first();
+        return $user;
     }
-
-
 }

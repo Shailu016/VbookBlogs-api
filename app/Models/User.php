@@ -53,7 +53,7 @@ class User extends Authenticatable
     {
         return SlugOptions::create()
             ->generateSlugsFrom('site')
-            ->saveSlugsTo('slug');  
+            ->saveSlugsTo('slug');
     }
 
    
@@ -71,7 +71,7 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Post::class, 'user_id', 'id');
     }
 
     public function profiles()
@@ -87,11 +87,9 @@ class User extends Authenticatable
     // users that follow this user
     public function getImagePathAttribute($value)
     {
-        if(!$value) {
+        if (!$value) {
             return asset('https://i.ibb.co/TPmLQyP/user.png');
         }
         return asset('images/' . $value);
     }
-    
-  
 }
