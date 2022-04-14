@@ -36,7 +36,7 @@ Route::get('user/{user:slug}/posts', [PostController::class, 'index']);
 Route::get('user/{user:slug}/publishedPosts', [PostController::class, 'publishedPost']);
 Route::get('/user_post', [PostController::class, 'usersPost'])->middleware('auth:sanctum');
 Route::get('user/{user:slug}/post/{post}', [PostController::class, 'show']);
-// Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum'); 
+// Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum');
 Route::post('/post/{post}/update/status_draft', [PostController::class,'statusUpdateDraft']);
 Route::post('/post/{post}/update/status_archive', [PostController::class,'statusUpdateArchive']);
 Route::post('/post/tags', [PostController::class,'post_by_tags']);
@@ -70,7 +70,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('check/bookmark', [BookmarkController::class, 'check']);
     Route::get("/profile", [AuthController::class, "profile"]);
     Route::post("/userProfile", [AuthController::class, "userProfile"]);
-    Route::get('/IsSubscribe', [AuthController::class,'is_subscribe']);
 });
 
 // Route::post('post/{post}/bookmark', [BookmarkController::class, 'add']);
@@ -92,7 +91,7 @@ Route::get("/user/{user:slug}/profile", [ProfileController::class, "getUserProfi
 
 
 Route::post('user/{user:slug}/subscribe', [SubscribeController::class,'subscribe'])->middleware('auth:sanctum');
-Route::post('user/{user:slug}/unsubscribe', [SubscribeController::class,'unSubscribe'])->middleware('auth:sanctum');
+Route::get('/is_subscribe', [SubscribeController::class,'is_subscribe'])->middleware('auth:sanctum');
 
 
 Route::get('/get_domain', [SiteController::class,'index']);

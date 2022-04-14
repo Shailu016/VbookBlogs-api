@@ -300,8 +300,6 @@ class PostController extends Controller
             return "User not found";
         } else {
             $post = Post::where('status', 'Published')->where('user_id', $user->id)->latest()->get();
-        
-       
             return response()->json($post);
         }
     }
