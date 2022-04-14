@@ -30,18 +30,21 @@ class SubscribeController extends Controller
         ]);
         }
     }
-    public function is_subscribe()
+    public function is_subscribe(User $user)
     {
+        $user = User::Where('slug', $user->slug)->first();
         $auth = Auth::id();
         
-        $subscriber = Subscribe::where('user_id', $auth)->first();
+        $subscriber = Subscribe::where('user_id', $auth)->where('admin_id', $user->id)->first();
         if (!$subscriber) {
             return response()->json([
                 'is_subscribe' => 0
               ]);
         } else {
             return response()->json([
-                'is_subscribe' => 1
+                'is_subscribe' => 1,
+                "data" => $subscriber
+
               ]);
         }
     }

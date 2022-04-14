@@ -91,7 +91,7 @@ Route::get("/user/{user:slug}/profile", [ProfileController::class, "getUserProfi
 
 
 Route::post('user/{user:slug}/subscribe', [SubscribeController::class,'subscribe'])->middleware('auth:sanctum');
-Route::get('/is_subscribe', [SubscribeController::class,'is_subscribe'])->middleware('auth:sanctum');
+Route::get('user/{user:slug}/is_subscribe', [SubscribeController::class,'is_subscribe'])->middleware('auth:sanctum');
 
 
 Route::get('/get_domain', [SiteController::class,'index']);
