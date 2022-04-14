@@ -92,4 +92,16 @@ class User extends Authenticatable
         }
         return asset('images/' . $value);
     }
+
+    public function views()
+    {
+        return $this->hasManyThrough(
+            Views::class,
+            Post::class,
+            'user_id', // Foreign key on the environments table...
+            'post_id', // Foreign key on the deployments table...
+            'id', // Local key on the projects table...
+            'id' // Local key on the environments table...
+        );
+    }
 }

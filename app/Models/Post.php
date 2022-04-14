@@ -7,11 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\User;
 use App\Models\Bookmark;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $fillable = [
         'name',
         'excerpt',
@@ -28,7 +27,7 @@ class Post extends Model
             
             
         ];
-        protected $appends = [
+    protected $appends = [
             'views',
             
         ];
@@ -49,7 +48,7 @@ class Post extends Model
     }
     public function users()
     {
-        return $this->belongsTo(User::class, 'user_id' );
+        return $this->belongsTo(User::class, 'user_id');
     }
     public function bookmarks()
     {
@@ -75,7 +74,4 @@ class Post extends Model
     {
         return $this->hasMany(Views::class, 'post_id')->sum('views');
     }
-
-  
-   
 }

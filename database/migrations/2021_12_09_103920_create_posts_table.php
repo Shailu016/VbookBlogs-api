@@ -24,7 +24,6 @@ class CreatePostsTable extends Migration
             $table->enum('status', ['Draft', 'Archive', 'published'])->default('published');
             $table->json('tags')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

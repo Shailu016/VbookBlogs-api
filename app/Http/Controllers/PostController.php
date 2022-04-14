@@ -267,12 +267,12 @@ class PostController extends Controller
 
         $totalViews = Views::sum('views');
         return response()->json([
-           'todays_Views' => $todaysviews,
-           'weekly_Views' => $weeklyViews,
-           'mothly_Views' => $mothlyViews,
-           'total_Views' => $totalViews,
+               'todays_Views' => $todaysviews,
+               'weekly_Views' => $weeklyViews,
+               'mothly_Views' => $mothlyViews,
+               'total_Views' => $totalViews,
            
-       ]);
+           ]);
     }
     
     public function all_tags(User $user)
