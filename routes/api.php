@@ -40,7 +40,7 @@ Route::get('user/{user:slug}/post/{post}', [PostController::class, 'show']);
 Route::post('/post/{post}/update/status_draft', [PostController::class,'statusUpdateDraft']);
 Route::post('/post/{post}/update/status_archive', [PostController::class,'statusUpdateArchive']);
 Route::post('/post/tags', [PostController::class,'post_by_tags']);
-Route::get('/post/views', [PostController::class,'post_views']);
+Route::get('/post/views', [PostController::class,'post_views'])->middleware('auth:sanctum');
 Route::get('/user/{user:slug}/tagList', [PostController::class,'all_tags']);
 Route::get('user/{user:slug}/postStats', [PostController::class, 'postStats']);
 

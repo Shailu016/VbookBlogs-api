@@ -16,6 +16,7 @@ class Comments extends Model
         'image_path'
     ];
     //append user name
+    public $table = "comments";
     protected $appends = [
         'user_name',
         
@@ -26,11 +27,7 @@ class Comments extends Model
         return $this->belongsTo(User::class, 'user_id')->first()->name;
     }
     
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class, 'user_id');
-    // }
-    public $table = "comments";
+   
 
     public function posts()
     {

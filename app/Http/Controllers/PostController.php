@@ -257,22 +257,36 @@ class PostController extends Controller
 
     public function post_views()
     {
-        $todaysviews =  Views::whereDate('created_at', Carbon::today()->toDateString())->sum('views');
-         
-        $date = Carbon::now()->subDays(7);
-        $weeklyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
        
-        $date = Carbon::now()->subDays(30);
-        $mothlyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
+        // $todaysviews =  Views::whereDate('created_at', Carbon::today()->toDateString())->sum('views');
+         
+        // $date = Carbon::now()->subDays(7);
+        // $weeklyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
+       
+        // $date = Carbon::now()->subDays(30);
+        // $mothlyViews = Views::whereDate('created_at', '>=', $date)->sum('views');
 
+        // $totalViews = Views::sum('views');
+        // return response()->json([
+        //        'todays_Views' => $todaysviews,
+        //        'weekly_Views' => $weeklyViews,
+        //        'mothly_Views' => $mothlyViews,
+        //        'total_Views' => $totalViews,
+           
+        //    ]);
+
+        $post = Post::where('user_id', Auth::id())->pluck('id');
+        $views = Views::whereIn('post_id', $post)->get();
+        $todaysviews =  Views::whereDate('created_at', Carbon::today()->toDateString())->sum('views');
+        $weeklyViews = Views::whereDate('created_at', '>=', Carbon::now()->subDays(7))->sum('views');
+        
         $totalViews = Views::sum('views');
         return response()->json([
-               'todays_Views' => $todaysviews,
-               'weekly_Views' => $weeklyViews,
-               'mothly_Views' => $mothlyViews,
-               'total_Views' => $totalViews,
-           
-           ]);
+            'todays_Views' => $todaysviews,
+            'weekly_Views' => $weeklyViews,
+            'total_Views' => $totalViews,
+            'views' => $views
+        ]);
     }
     
     public function all_tags(User $user)
