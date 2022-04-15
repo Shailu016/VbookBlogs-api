@@ -60,4 +60,10 @@ class CommentsController extends Controller
         }
         return "you are not authorized to delete this comment";
     }
+
+    public function dasboardComments(User $user)
+    {
+        $post = Post::where('user_id', $user->id)->with('comments')->get();
+        return response()->json($post);
+    }
 }

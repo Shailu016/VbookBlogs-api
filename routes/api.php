@@ -48,6 +48,7 @@ Route::get('user/{user:slug}/postStats', [PostController::class, 'postStats']);
 Route::get('/comments/{post}', [CommentsController::class, 'index']);
 Route::post('post/{post}/comments', [CommentsController::class, 'store'])->middleware('auth:sanctum');
 Route::delete('comments/{comments}/delete', [CommentsController::class, 'delete'])->middleware('auth:sanctum');
+Route::get('user/{user:slug}/comments', [CommentsController::class, 'dasboardComments']);
 
 
 Route::post('post/{post}/likes', [LikesController::class, 'store'])->middleware('auth:sanctum');

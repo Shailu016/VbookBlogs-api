@@ -15,18 +15,29 @@ class Comments extends Model
         'user_name',
         'image_path'
     ];
+    //append user name
+    protected $appends = [
+        'user_name',
+        
+    ];
+    //append user name
+    public function getUserNameAttribute()
+    {
+        return $this->belongsTo(User::class, 'user_id')->first()->name;
+    }
     
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'user_id');
+    // }
     public $table = "comments";
 
-    public function post()
+    public function posts()
     {
-        return $this->belongsTo(Post::class, 'posts');
+        return $this->belongsTo(Post::class, );
     }
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', );
     }
-    
-
-   
 }
