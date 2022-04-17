@@ -8,11 +8,13 @@ use App\Models\Likes;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Views;
+use App\Models\Subscribe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use App\Events\PostPublished;
-use App\Notifications\PostCreated;
+use App\Notifications\PostCreateNotification;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
@@ -76,6 +78,15 @@ class PostController extends Controller
             $posts->category_id = request('category_id');
           
             $posts->save();
+            $users = Subscribe::where('admin_id', $posts->user_id)->pluck('user_id');
+            $users = User::whereIn('id', $users)->get();
+        
+
+            foreach ($users as $user) {
+                $user->notify(new PostCreateNotification($posts));
+            }
+
+           
             
             return response()->json($posts);
         } catch (\Exception $e) {
@@ -263,7 +274,6 @@ class PostController extends Controller
     
     public function all_tags(User $user)
     {
-        $user = User::where('slug', $user->slug)->first();
         $tags = Post::where('user_id', $user->id)->select('tags')->get();
 
         $result = $tags->map(function ($tag, $key) {
@@ -296,7 +306,6 @@ class PostController extends Controller
     {
         $user = User::where('slug', $user->slug)->first();
         $post = Post::where('user_id', $user->id)->with('views', 'likes', 'users')->withcount('likes', 'comments')->get();
-    
         return response()->json([
         'post' => $post,
         
