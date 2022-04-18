@@ -15,6 +15,14 @@ class Comments extends Model
         'user_name',
         'image_path'
     ];
+    protected $casts = [
+        
+       
+        'created_at'  => 'date:d M',
+        'updated_at'  => 'date:d M',
+        
+        
+    ];
     //append user name
     public $table = "comments";
     protected $appends = [
