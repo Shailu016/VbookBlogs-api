@@ -14,10 +14,8 @@ use Spatie\Permission\Models\Permission;
 
 class AuthController extends Controller
 {
-    
     public function register(Request $request)
     {
-
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -33,13 +31,12 @@ class AuthController extends Controller
             'site' =>request('site'),
         ]);
         $token = $user->createToken('auth_token')->plainTextToken;
-// if user site is not empty then make him admin
+        // if user site is not empty then make him admin
 
-       if($user->site != null) {
+        if ($user->site != null) {
             //  $role = Role::create(['name' => 'admin']);
             $permission = Permission::where('name', 'admin')->first();
-            if(! $permission){
-
+            if (! $permission) {
                 $permission = Permission::create(['name' => 'admin']);
             }
            
@@ -158,9 +155,4 @@ class AuthController extends Controller
             ]);
         }
     }
-
-    
-        
-    
 }
-

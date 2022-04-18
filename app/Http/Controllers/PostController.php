@@ -280,7 +280,7 @@ class PostController extends Controller
             return ($tag->tags);
         });
     
-        $data = array_values(array_unique(Arr::flatten($result)));
+        $data = array_unique(Arr::flatten($result));
     
         return response([
 
