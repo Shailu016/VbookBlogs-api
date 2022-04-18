@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Comments extends Model
 {
@@ -44,5 +45,10 @@ class Comments extends Model
     public function users()
     {
         return $this->belongsTo(User::class, 'user_id', );
+    }
+    //get created at date diffForHumans();
+    public function getCreatedAtAttribute()
+    {
+        return Carbon::parse($this->attributes['created_at'])->diffForHumans();
     }
 }
