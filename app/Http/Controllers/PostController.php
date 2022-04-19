@@ -208,15 +208,51 @@ class PostController extends Controller
     }
 
    
-    public function statusUpdateDraft(Post $post)
+    public function statusUpdateDraft(Request $request)
     {
-        $post =  $post->update(['status' => "Draft"]);
+        $request->validate(
+            [
+                'name' => 'required',
+                'excerpt' => 'required',
+                'body' => 'required',
+                'image' => 'mimes:jpg,png,jpeg,webp|max:50480'
+
+            ]
+        );
+
+      
+        if (isset($request->image)) {
+            $imagePath = time() . $request->name . '.'. $request->image->extension();
+            $request->image->move(public_path('images'), $imagePath);
+                
+            $user = User::where('id', Auth::id())->first();
+        }
+           
+        $posts = new Post();
+        $posts->name = request('name');
+        $posts->excerpt = request('excerpt');
+        $posts->body = request('body');
+        $posts->tags = strtolower(json_encode(request('tags')));
+            
+        $posts->image_path = $imagePath ?? null;
+           
+        $posts->user_id = Auth::id();
+        $posts->category_id = request('category_id');
+          
+        $posts->save();
+        $post =  $posts->update(['status' => "Draft"]);
         return response()->json([
             'message' => 'Post status updated successfully',
             'status' => "Draft",
            
         
         ]);
+        
+
+     
+           
+            
+        return response()->json($posts);
     }
 
     

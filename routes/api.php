@@ -37,7 +37,7 @@ Route::get('user/{user:slug}/publishedPosts', [PostController::class, 'published
 Route::get('/user_post', [PostController::class, 'usersPost'])->middleware('auth:sanctum');
 Route::get('user/{user:slug}/post/{post}', [PostController::class, 'show']);
 // Route::get('/post_by_category/{category}',[PostController::class, 'category'])->middleware('auth:sanctum');
-Route::post('/post/{post}/update/status_draft', [PostController::class,'statusUpdateDraft']);
+Route::post('/post/update/status_draft', [PostController::class,'statusUpdateDraft']);
 Route::post('/post/{post}/update/status_archive', [PostController::class,'statusUpdateArchive']);
 Route::post('/post/tags', [PostController::class,'post_by_tags']);
 Route::get('/post/views', [PostController::class,'post_views'])->middleware('auth:sanctum');
