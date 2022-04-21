@@ -232,7 +232,7 @@ class PostController extends Controller
         $posts->name = request('name');
         $posts->excerpt = request('excerpt');
         $posts->body = request('body');
-        $posts->tags = strtolower(json_encode(request('tags')));
+        $posts->tags = strtolower(request('tags'));
             
         $posts->image_path = $imagePath ?? null;
            
