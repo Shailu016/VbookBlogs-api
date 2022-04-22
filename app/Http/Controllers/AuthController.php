@@ -11,6 +11,7 @@ use App\Notifications\sendToken;
 use DB;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Handler;
 
 class AuthController extends Controller
 {
@@ -75,13 +76,7 @@ class AuthController extends Controller
 
     public function profile(Request $request)
     {
-        $user = User::with('profiles')->where('id', Auth::id())->first();
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
-        }
-        return $user;
+        return Auth::user();
     }
 
     public function logout(Request $request)
