@@ -65,8 +65,8 @@ class ProfileController extends Controller
     
     public function getUserProfile(User $user)
     {
-        $user =User::where('slug', $user->slug)->firstOrFail();
-        $user = User::with('profiles')->where('slug', $user->slug)->first();
+        $user = User::where('slug', $user->slug)->first();
+        
         return $user;
     }
 }
