@@ -66,7 +66,11 @@ class ProfileController extends Controller
     public function getUserProfile(User $user)
     {
         $user = User::where('slug', $user->slug)->first();
+        $subscriber = Subscribe::where('admin_id', $user->id)->count('user_id');
         
-        return $user;
+        return response()->json([
+            'user' => $user,
+            'subscriber' => $subscriber
+        ]);
     }
 }
