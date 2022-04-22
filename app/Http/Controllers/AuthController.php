@@ -155,4 +155,18 @@ class AuthController extends Controller
             ]);
         }
     }
+    //check email is register or not
+    public function checkEmail(Request $request)
+    {
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                "email" => 0,            ]);
+        } else {
+            return response()->json([
+                "email" => 1,
+            ]);
+        }
+    }
 }
