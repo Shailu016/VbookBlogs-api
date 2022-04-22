@@ -76,6 +76,11 @@ class AuthController extends Controller
     public function profile(Request $request)
     {
         $user = User::with('profiles')->where('id', Auth::id())->first();
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
         return $user;
     }
 
@@ -162,10 +167,10 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
         if (!$user) {
             return response()->json([
-                "email" => 0,            ]);
+                "is_email_taken" => 0,            ]);
         } else {
             return response()->json([
-                "email" => 1,
+                "is_email_taken" => 1,
             ]);
         }
     }
