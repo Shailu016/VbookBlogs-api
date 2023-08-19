@@ -13,7 +13,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CategoryController;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -25,11 +24,14 @@ use App\Http\Controllers\CategoryController;
 |
 */
 
+Route::get('/', function () {
+    return "OK";
+});
 
 // post routes
 Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function () {
     //
-   
+
     Route::post('post/{post}/unpublish', [PostController::class, 'unpublishPost']);
 });
 Route::get('post', [PostController::class, 'index']);
@@ -77,32 +79,32 @@ Route::post('forgot-password', [AuthController::class, 'forgetPassword']);
 
 Route::post("/userProfile", [AuthController::class, "userProfile"])->middleware('auth:sanctum');
 
-Route::get("/profile",[AuthController::class, "profile"])->middleware('auth:sanctum');
-Route::post("/upload",[ProfileController::class, "store"])->middleware('auth:sanctum');
+Route::get("/profile", [AuthController::class, "profile"])->middleware('auth:sanctum');
+Route::post("/upload", [ProfileController::class, "store"])->middleware('auth:sanctum');
 
-Route::get('/user_post',[PostController::class, 'usersPost'])->middleware('auth:sanctum');
+Route::get('/user_post', [PostController::class, 'usersPost'])->middleware('auth:sanctum');
 
-Route::post('/reported/{comments}',[ReportController::class, 'store'])->middleware('auth:sanctum');
+Route::post('/reported/{comments}', [ReportController::class, 'store'])->middleware('auth:sanctum');
 
 
 Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function () {
-    
-    Route::get('/reported',[ReportController::class, 'index'])->middleware('auth:sanctum');
-    Route::post('/block/{report}',[ReportController::class, 'block'])->middleware('auth:sanctum');
-    Route::get('/block_users',[ReportController::class, 'all_block_user'])->middleware('auth:sanctum');
+
+    Route::get('/reported', [ReportController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('/block/{report}', [ReportController::class, 'block'])->middleware('auth:sanctum');
+    Route::get('/block_users', [ReportController::class, 'all_block_user'])->middleware('auth:sanctum');
 });
 
-Route::post('/follow/{post}',[UserFollowController::class,'index'])->middleware('auth:sanctum');
-Route::get('/t',[UserFollowController::class,'userfollower'])->middleware('auth:sanctum');
-Route::get('/tt',[UserFollowController::class,'user_follower_post'])->middleware('auth:sanctum');
-Route::get('/ttt',[ProfileController::class,'all_users']);
-Route::get('/check/{post}',[UserFollowController::class,'check'])->middleware('auth:sanctum');;
-Route::get('/all/{user}',[PostController::class,'user_all_post']);
+Route::post('/follow/{post}', [UserFollowController::class,'index'])->middleware('auth:sanctum');
+Route::get('/t', [UserFollowController::class,'userfollower'])->middleware('auth:sanctum');
+Route::get('/tt', [UserFollowController::class,'user_follower_post'])->middleware('auth:sanctum');
+Route::get('/ttt', [ProfileController::class,'all_users']);
+Route::get('/check/{post}', [UserFollowController::class,'check'])->middleware('auth:sanctum');
+;
+Route::get('/all/{user}', [PostController::class,'user_all_post']);
 
 
 
-Route::post('/category/create',[CategoryController::class,'store']);
-Route::post('/category/{category}/update',[CategoryController::class,'update']);
-Route::get('/category',[CategoryController::class,'index']);
-Route::get('/category/{category}',[CategoryController::class,'show']);
-
+Route::post('/category/create', [CategoryController::class,'store']);
+Route::post('/category/{category}/update', [CategoryController::class,'update']);
+Route::get('/category', [CategoryController::class,'index']);
+Route::get('/category/{category}', [CategoryController::class,'show']);
