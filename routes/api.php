@@ -24,6 +24,7 @@ use App\Http\Controllers\SubscribeController;
 |
 */
 
+
 //Admin permission
 Route::group(['middleware' => ['permission:admin', 'auth:sanctum']], function () {
     Route::post('post/create', [PostController::class, 'store'])->middleware('auth:sanctum');
